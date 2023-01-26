@@ -7,8 +7,9 @@ const myDB = require('./connection');
 const passport = require('passport');
 const session = require('express-session');
 const fccTesting = require('./freeCodeCamp/fcctesting.js');
-
 const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
 fccTesting(app); //For FCC testing purposes
 app.set('view engine', 'pug');
@@ -30,6 +31,10 @@ myDB(async client => {
     
     routes(app, db);
     auth(app, db);
+
+    io.on('connection', socket => {
+        console.log('A user has connected');
+    });
 }).catch(err => {
     app.get('/', (req, res) => {
         res.render('index', {'title': err, 'message': 'Unable to connect to database'});
@@ -37,6 +42,6 @@ myDB(async client => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+http.listen(PORT, () => {
     console.log('Listening on port ' + PORT);
 });
