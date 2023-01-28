@@ -7,7 +7,8 @@ module.exports = function (app, db) {
             title: 'Home page',
             message: 'Please login',
             showLogin: true,
-            showRegistration: true
+            showRegistration: true,
+            showSocialAuth: true
         });
     });
 
